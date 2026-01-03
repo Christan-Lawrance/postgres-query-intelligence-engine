@@ -10,7 +10,7 @@ Think of it as:
 """
 
 from sqlalchemy import Column, Integer, Float, ForeignKey, Boolean, func, DateTime, JSON
-from db.base import Base
+from app.db.base import Base
 
 
 class QueryAnalysis(Base):

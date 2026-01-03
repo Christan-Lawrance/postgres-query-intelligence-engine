@@ -5,23 +5,23 @@ One row = one normalized SQL fingerprint
 Everything here is metadata, not runtime data."""
 
 from sqlalchemy import Column, Integer, Text, DateTime, func
-from db.base import Base
+from app.db.base import Base
 
 
 class Query(Base):
-    __tabelname__ = "queries"
+    __tablename__ = "queries"
 
     id = Column(Integer, primary_key=True)
     normalized_sql = Column(Text, nullable=False, unique=True)
     raw_example_sql = Column(Text, nullable=False)
     total_executions = Column(Integer, nullable=False, default=0)
     first_seen_at = Column(
-        DateTime(Timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     last_seen_at = Column(
-        DateTime(Timezone=True),
+        DateTime(timezone=True),
         server_default=func.now(),
-        onupdate=func.now,
+        onupdate=func.now(),
         nullable=False,
     )
 

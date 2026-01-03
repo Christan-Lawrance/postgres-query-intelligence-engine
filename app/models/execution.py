@@ -9,13 +9,13 @@ One-line mental model:
 query_executions = “This query ran at this time and took this long.”
 """
 
-from sqlalchemy import Column, Integer, Text, Float, ForeignKey, func, Datetime
+from sqlalchemy import Column, Integer, Text, Float, ForeignKey, func, DateTime
 
-from db.base import Base
+from app.db.base import Base
 
 
 class QueryExecution(Base):
-    __tabelname__ = "query_executions"
+    __tablename__ = "query_executions"
 
     id = Column(Integer, primary_key=True)
 
@@ -24,7 +24,7 @@ class QueryExecution(Base):
     )
 
     executed_at = Column(
-        Datetime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True), server_default=func.now(), nullable=False
     )
 
     duration_ms = Column(Float, nullable=False)

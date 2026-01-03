@@ -10,7 +10,7 @@ Think of it as:
 """
 
 from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Text, func
-from db.base import Base
+from app.db.base import Base
 
 
 class Recommendation(Base):
