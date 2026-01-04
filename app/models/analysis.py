@@ -19,7 +19,7 @@ class QueryAnalysis(Base):
     id = Column(Integer, primary_key=True)
 
     query_id = Column(
-        Integer, ForeignKey("querie.id", ondelete="CASCADE"), nullable=False
+        Integer, ForeignKey("queries.id", ondelete="CASCADE"), nullable=False
     )
 
     executed_at = Column(
@@ -32,7 +32,7 @@ class QueryAnalysis(Base):
     execution_time_ms = Column(Float, nullable=True)
 
     seq_scan_detected = Column(Boolean, default=False, nullable=False)
-    IndexError_scan_detected = Column(Boolean, default=False, nullable=False)
+    index_scan_detected = Column(Boolean, default=False, nullable=False)
 
 
 # Conceptual SQL Definition Equivalent:
