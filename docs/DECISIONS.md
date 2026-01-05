@@ -1,6 +1,11 @@
 # Architectural Decisions — Postgres Query Intelligence Engine
 
-This document records **why** certain design choices were made. These decisions are intentional and reflect production-grade backend thinking rather than convenience or tutorials.
+
+This document captures **key design decisions** made while building the Postgres Query Intelligence Engine.
+
+Each decision explains **why a certain approach was chosen and what tradeoffs were consciously accepted**.
+
+These are not accidental outcomes — they are deliberate architectural choices.
 
 ---
 
@@ -107,3 +112,118 @@ This system is designed for engineers and automation, not end users.
   * correctness
 
 **Result:** deeper backend mastery without frontend distraction.
+
+---
+
+
+## 1️⃣ Why the LLM Is Optional
+
+The LLM is treated as an **augmentation layer**, not a core dependency.
+
+### Decision
+
+* The system must function fully **without** the LLM.
+* Query capture, analysis, and metrics collection never depend on AI output.
+
+### Rationale
+
+* LLM availability is not guaranteed (rate limits, outages, cost)
+* Observability systems must never block on external services
+* Performance analysis must remain deterministic
+
+### Tradeoff
+
+* Without the LLM, explanations are less human-friendly
+* With the LLM, insight quality improves, but correctness never depends on it
+
+This ensures the system is **robust first, intelligent second**.
+
+---
+
+## 2️⃣ Why Recommendations Are Non-Blocking
+
+Recommendations are **advisory artifacts**, not execution-critical data.
+
+### Decision
+
+* Failure to generate a recommendation must never:
+
+  * break ingestion
+  * block analysis
+  * corrupt data
+
+### Rationale
+
+* Recommendations are derived, not primary data
+* Blocking on recommendations would couple core observability to interpretation
+* In production, partial insight is better than system failure
+
+### Tradeoff
+
+* Some slow queries may temporarily lack recommendations
+* System reliability is preserved under all failure modes
+
+This mirrors how real observability and APM systems behave.
+
+---
+
+## 3️⃣ Why Confidence ≠ Certainty
+
+Confidence represents **evidence strength**, not correctness.
+
+### Decision
+
+* Confidence is stored as a numeric score
+* It reflects how strongly the data supports a recommendation
+* It does **not** claim guaranteed improvement
+
+### Rationale
+
+* Database performance is context-dependent
+* The same optimization can help or hurt depending on workload
+* Overstating certainty leads to dangerous automation
+
+### Tradeoff
+
+* Requires users to exercise judgment
+* Avoids false authority from AI-generated advice
+
+The system is explicit about uncertainty instead of hiding it.
+
+---
+
+## 4️⃣ Why Severity Is System-Owned
+
+Severity indicates **impact**, not interpretation.
+
+### Decision
+
+* Severity is derived deterministically from observed signals
+* The LLM is not allowed to decide severity
+
+### Rationale
+
+* Severity must be consistent across time and queries
+* LLMs are probabilistic and context-sensitive
+* Mixing interpretation with policy leads to drift
+
+### Tradeoff
+
+* Severity logic may be simpler than an LLM could express
+* Guarantees predictable behavior and comparability
+
+Severity answers: *How bad is this if true?*
+Confidence answers: *How sure are we that this is true?*
+
+Keeping them separate preserves clarity.
+
+---
+
+## 🧠 Closing Principle
+
+> The system owns truth.
+> The LLM offers perspective.
+
+Every decision reinforces that boundary.
+
+This is how AI is safely integrated into production systems.
