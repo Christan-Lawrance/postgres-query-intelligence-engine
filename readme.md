@@ -220,6 +220,7 @@ Future extensions (optional):
 
 ---
 
+
 ## 🧩 One-Line Summary
 
 > A production-grade PostgreSQL query observability engine with safe, confidence-aware LLM insights — built the way internal platform tools are actually built.
