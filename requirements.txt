@@ -1,0 +1,9 @@
+sqlalchemy
+alembic
+psycopg2-binary
+strawberry-graphql
+uvicorn
+starlette
+python-dotenv
+openai
+pydantic
